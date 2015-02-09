@@ -10,7 +10,7 @@ module.exports = function(app) {
     app.get('/notes', function(req, res) {
         Note.find({}, function(err, notes) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json(notes.map(function(note) {
                 return {
@@ -27,7 +27,7 @@ module.exports = function(app) {
     app.get('/notes/:id', function(req, res) {
         Note.findById(req.params.id, function(err, note) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: note._id,
@@ -47,7 +47,7 @@ module.exports = function(app) {
 
         note.save(function (err, note) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: note._id,
@@ -59,14 +59,14 @@ module.exports = function(app) {
     });
 
     //PUT /notes
-    app.put('/notes', function (req, res) {
+    app.put('/notes/:id', function (req, res) {
         Note.findByIdAndUpdate(req.params.id, {
             title: req.body.title,
             body: req.body.body
         },
         function(err, note) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: note._id,
@@ -80,8 +80,8 @@ module.exports = function(app) {
     //DELETE /notes
     app.delete('/notes/:id', function(req, res) {
         Note.findByIdAndRemove(req.params.id, function(err, note) {
-            if (err) return res.send(500, "Database error");
-            return res.send(204);
+            if (err) return res.status(500).send("Database error");
+            return res.status(204).send();
         });
     });
 };

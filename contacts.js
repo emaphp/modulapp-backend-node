@@ -9,7 +9,7 @@ module.exports = function(app) {
     app.get('/contacts', function (req, res) {
         Contact.find({}, function (err, contacts) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json(contacts.map(function(contact) {
                 return {
@@ -28,7 +28,7 @@ module.exports = function(app) {
     app.get('/contacts/:id', function(req, res) {
         Contact.findById(req.params.id, function(err, contact) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: contact._id,
@@ -53,7 +53,7 @@ module.exports = function(app) {
 
         contact.save(function(err, contact) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: contact._id,
@@ -67,7 +67,7 @@ module.exports = function(app) {
     });
 
     //PUT /contacts
-    app.put('/contacts', function(req, res) {
+    app.put('/contacts/:id', function(req, res) {
         Contact.findByIdAndUpdate(req.params.id, {
             name: req.body.name,
             surname: req.body.surname,
@@ -77,7 +77,7 @@ module.exports = function(app) {
         },
         function(err, contact) {
             if (err)
-                return res.send(500, "Database error");
+                return res.status(500).send("Database error");
 
             res.json({
                 id: contact._id,
@@ -91,10 +91,10 @@ module.exports = function(app) {
     });
 
     //DELETE /notes
-    app.delete('/notes/:id', function(req, res) {
-        Note.findByIdAndRemove(req.params.id, function(req, res) {
-            if (err) return res.send(500, "Database error");
-            return res.send(204);
+    app.delete('/contacts/:id', function(req, res) {
+        Contact.findByIdAndRemove(req.params.id, function(err, contact) {
+            if (err) return res.status(500).send("Database error");
+            return res.status(204).send();
         });
     });
 };
